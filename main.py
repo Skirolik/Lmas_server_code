@@ -1,59 +1,70 @@
 import requests
 from pprint import pprint
+from datetime import datetime
 
-API_Key="6a02a1fcb5602a735bddbe33439fcaf0"
+API_Key="7eb48147dc3982995adfcff0518e670d"
 
 Weather_desription=[]
 date_and_time=[]
 temperature=[]
+weather_id=[]
 
+lat = 8.0883
+lon=77.5385
 
-location= "Sibsagar"
-
-lat = 36.2137
-lon=-88.6125
-
-weather_url = f"http://api.openweathermap.org/data/2.5/weather?q={location}&units=metric&appid="
+weather_url = f"http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&units=metric&appid="
 
 final_url= weather_url+API_Key
 
 weather_data= requests.get(final_url).json()
-pprint(weather_data )
-pprint(weather_data ['weather'][0]['description'])
-pprint(weather_data ['weather'][0]['id'])
 
-Weather_desription.append(weather_data ['weather'][0]['id'])
+
+time=weather_data['dt']
+time1=datetime.fromtimestamp(time)
+print(time1)
+#
+# Weather_desription.append(weather_data ['weather'][0]['id'])
+Weather_desription.append(803)
 humidity = weather_data['main']['humidity']
 temp= weather_data['main']['temp']
 print('Weather is:',Weather_desription[0])
-print('Humidity is :',weather_data['main']['humidity'])
-print('Temperature is :',weather_data['main']['temp'])
-if 802 >=Weather_desription[0] >= 805:
-    if humidity >= 99:
-        print ('conditional True')
-    elif temp >=2:
-        print('temperature conditional true')
 
-if 650 >= Weather_desription[0] >= 200:
+if  Weather_desription[0] == 804:
+    print('true')
+
+
+elif 650 >= Weather_desription[0] >= 200:
     print ('Thunderstorm with light rain')
-if 771 >= Weather_desription[0]>= 701:
+elif 771 >= Weather_desription[0]>= 701:
     print('No lightning')
-if Weather_desription[0] == 781:
+elif Weather_desription[0] == 781:
     print('tornado')
+elif Weather_desription[0] == 800:
+    print('false')
+
+##if the predicion is 803 ie bbroken clouds: 51-84% check next hour prediction to see if the condition changes
+##if condition changes from broken to overcast or rain then hoot else not
+
+elif Weather_desription[0] == 803:
+    data = f'https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&units=metric&appid={API_Key}'
+
+    data = requests.get(data).json()
+    pprint(data['hourly'][1]['weather'][0]['id'])
+    weather_id.append(data ['hourly'][1]['weather'][0]['id'])
+
+    if weather_id[0] == 804:
+        print('true')
+    elif 650 >= weather_id[0] >= 200:
+        print('Thunderstorm with light rain')
+    elif 771 >= weather_id[0] >= 701:
+        print('No lightning')
+    elif weather_id[0] == 781:
+        print('tornado')
+    elif weather_id[0] == 800:
+        print('false')
+    else:
+        print('false')
+
 else:
     print('false')
 
-
-# for d in weather_data['list']:
-#     a=d['weather'][0]['description']
-#     temperature.append(d['main']['temp'])
-#     Weather_desription.append(a)
-#
-#     date_and_time.append(d['dt_txt'])
-#     pprint((d['wind']))
-#     pprint(d['weather'])
-#     pprint(d['main'])
-#     pprint(d['dt_txt'])
-# # pprint(Weather_desription)
-# # pprint(date_and_time)
-# # # pprint(temperature)
